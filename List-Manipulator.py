@@ -66,3 +66,46 @@ def add_item(list_name, item, priority):
                 new_position = int(old_position) + 1
                 current_item = f'{new_position}{current_item[index:]}'
                 my_lists[list_name][items] = current_item
+            
+
+
+def del_list(list_name):
+    '''
+    Completely deletes a specified list.
+
+    Parameters:
+    list_name(str): The name of the list which is to be deleted.
+
+    Raises:
+    KeyError: If the list does not already exists.
+    '''    
+    
+    if list_name not in my_lists:
+        raise KeyError(f'List of name {list_name} does not exist.')
+    else:
+
+        my_lists.pop(list_name)
+
+
+def remove_item(list_name, item):
+    '''
+    Removes an item from a specified list.
+
+    Parameters:
+    list_name(str): The name of the list from which an item is to be removed.
+    item(str): The item which is to be removed from the specified list.
+
+    Raises:
+    KeyError: If the list doesnot exists.
+    ValueError: If the item in the list does not exists.
+    '''
+
+
+    if list_name not in my_lists:
+        raise KeyError(f'List of name {list_name} does not exist.') 
+
+    else:
+        try:
+            my_lists[list_name].remove(item)
+        except ValueError:
+            print(f'Item does not exists in {list_name}')
