@@ -19,11 +19,15 @@ def create_list(list_name): ##Function which creates a new list with the name of
     
     '''
 
+    try:
+        if list_name in my_lists:
+            raise KeyError(f'List of name "{list_name}" already exists')
+        else:
+            my_lists[list_name] = []
 
-    if list_name in my_lists:
-        raise KeyError('List of name "', list_name, '" already exists')
-    else:
-        my_lists[list_name] = []
+    except KeyError as error:
+        print(f'''KeyError: Cannot create list.
+Details: {error}''')
 
 
 
@@ -44,30 +48,38 @@ def add_item(list_name, item, priority):
     KeyError: If the name of list does not already exists.
     '''
 
-    
-    if priority < 1:
-        raise ValueError('A Positive Number Is Required')
+    try:
+        if priority < 1:
+            raise ValueError('A Positive Number Is Required')
+    except ValueError as error:
+        print(f'ValueError: {error}')
 
-    if not list_name in my_lists:
-        raise KeyError('List of name "', list_name, '" does not exist.')
-    else:
-        if priority >= len(my_lists[list_name]):
-            item = f'{len(my_lists[list_name]) + 1} {item}'
-            my_lists[list_name].append(item)
-
+    try:
+        if not list_name in my_lists:
+            raise KeyError(f'List of name "{list_name}" does not exist.')
         else:
-            item = f'{priority} {item}'
-            my_lists[list_name].insert(priority - 1, item)
-
-            for items in range(priority, len(my_lists[list_name])):
-                current_item = my_lists[list_name][items]
-                index = current_item.find(' ')
-                old_position = current_item[:index]
-                new_position = int(old_position) + 1
-                current_item = f'{new_position}{current_item[index:]}'
-                my_lists[list_name][items] = current_item
             
+            if priority >= len(my_lists[list_name]):
+                item = f'{len(my_lists[list_name]) + 1} {item}'
+                my_lists[list_name].append(item)
 
+            else:
+                item = f'{priority} {item}'
+                my_lists[list_name].insert(priority - 1, item)
+
+                for items in range(priority, len(my_lists[list_name])):
+                    current_item = my_lists[list_name][items]
+                    index = current_item.find(' ')
+                    old_position = current_item[:index]
+                    new_position = int(old_position) + 1
+                    current_item = f'{new_position}{current_item[index:]}'
+                    my_lists[list_name][items] = current_item
+                    
+    except KeyError as error:
+        print(f'''KeyError: Cannot perform operation.
+Details: {error}''')
+
+            
 
 def del_list(list_name):
     '''
@@ -79,12 +91,15 @@ def del_list(list_name):
     Raises:
     KeyError: If the list does not already exists.
     '''    
-    
-    if list_name not in my_lists:
-        raise KeyError(f'List of name {list_name} does not exist.')
-    else:
 
-        my_lists.pop(list_name)
+    try:
+        if list_name not in my_lists:
+            raise KeyError(f'List of name "{list_name}" does not exist.')
+        else:
+            my_lists.pop(list_name)
+    except KeyError as error:
+        print(f'''KeyError: Cannot perform operation.
+Details: {error}''')
 
 
 def remove_item(list_name, item):
