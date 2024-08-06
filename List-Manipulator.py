@@ -15,8 +15,7 @@ def create_list(list_name): ##Function which creates a new list with the name of
     list_name(str): The name of the new List
 
     Raises:
-    KeyError: If the list name already exists.
-    
+    KeyError: If the list name already exists. 
     '''
 
     try:
@@ -55,6 +54,13 @@ def add_item(list_name, item, priority):
         print(f'ValueError: {error}')
 
     try:
+        if item in my_lists[list_name]:
+            raise DuplicateItemError(f'''Item already exists.
+ItemName: {item}''')
+    except DuplicateItemError as error:
+            print(f'DuplicateItemError: {error}')
+
+    try:
         if not list_name in my_lists:
             raise KeyError(f'List of name "{list_name}" does not exist.')
         else:
@@ -67,6 +73,7 @@ def add_item(list_name, item, priority):
                 item = f'{priority} {item}'
                 my_lists[list_name].insert(priority - 1, item)
 
+                ####Changes the priority numbers of other items in the list if an item is inserted.
                 for items in range(priority, len(my_lists[list_name])):
                     current_item = my_lists[list_name][items]
                     index = current_item.find(' ')
@@ -115,12 +122,37 @@ def remove_item(list_name, item):
     ValueError: If the item in the list does not exists.
     '''
 
-
-    if list_name not in my_lists:
-        raise KeyError(f'List of name {list_name} does not exist.') 
+    try:
+        if list_name not in my_lists:
+            raise KeyError(f'List of name {list_name} does not exist.') 
+    except KeyError as error:
+        print(f'''KeyError: Cannot perform operation.
+Details: {error}''') 
 
     else:
         try:
-            my_lists[list_name].remove(item)
+            counter = 1
+            for items in my_lists[list_name]:
+            
+                index = items.find(' ')
+                item_find = items[index + 1:]
+                
+                if item == item_find:
+                    item = f'{counter} {item}'
+                    my_lists[list_name].remove(item)
+                    break
+                    
+                counter += 1      
+
+
+            ####Numbers the remaining items of the list accordingly
+            for items in range(counter - 1 , len(my_lists[list_name])):
+                current_item = my_lists[list_name][items]
+                index = current_item.find(' ')
+                old_position = current_item[:index]
+                new_position = int(old_position) - 1 ####Reduces the priority number of items after the removed one.
+                current_item = f'{new_position}{current_item[index:]}'
+                my_lists[list_name][items] = current_item
+                
         except ValueError:
-            print(f'Item does not exists in {list_name}')
+            print(f'Item does not exists in "{list_name}"')
